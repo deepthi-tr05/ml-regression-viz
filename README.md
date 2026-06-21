@@ -12,8 +12,7 @@
 **Three regression models in one stunning interactive dashboard.**  
 Explore **Linear Regression**, **Polynomial Regression**, and **Locally Weighted Linear Regression (LWLR)** — all implemented from scratch in JavaScript with real-time controls.
 
-[🚀 Live Demo (Vercel)](https://ml-regression-viz.vercel.app) &nbsp;|&nbsp; [📁 Repository](https://github.com/deepthi-tr05/ml-regression-viz) &nbsp;|&nbsp; [📊 View Visualizer](https://github.com/deepthi-tr05/ml-regression-viz#models)
-
+[🚀 Live Demo (Vercel)](https://ml-regression-viz.vercel.app/) 
 </div>
 
 ---
