@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ML Regression Visualizer | Linear · Polynomial · LWLR</title>
+  <meta name="description" content="Interactive visualizer for Linear Regression, Polynomial Regression, and Locally Weighted Linear Regression (LWLR). Explore all three models side-by-side with live controls."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Animated mesh background -->
+  <div class="bg-mesh">
+    <div class="mesh-orb orb1"></div>
+    <div class="mesh-orb orb2"></div>
+    <div class="mesh-orb orb3"></div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <svg class="logo-svg" viewBox="0 0 36 24" fill="none">
+          <polyline points="2,20 8,10 14,14 20,6 26,12 34,4" stroke="url(#hg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="hg" x1="0" y1="0" x2="36" y2="24">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="50%" stop-color="#818cf8"/>
+              <stop offset="100%" stop-color="#f472b6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">ML<span class="logo-accent">Regress</span></span>
+      </div>
+      <nav class="nav">
+        <a href="#hero" class="nav-link active" id="nl-home">Home</a>
+        <a href="#models-section" class="nav-link" id="nl-models">Models</a>
+        <a href="#theory-section" class="nav-link" id="nl-theory">Theory</a>
+        <a href="#code-section" class="nav-link" id="nl-code">Code</a>
+      </nav>
+      <a href="https://github.com/deepthi-tr05/ml-regression-viz" target="_blank" class="github-btn" id="github-nav">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="tag-dot"></span>
+        3 Models · Interactive · Real-Time
+      </div>
+      <h1 class="hero-title">
+        ML Regression<br/>
+        <span class="hero-grad">Visualizer</span>
+      </h1>
+      <p class="hero-sub">
+        Explore <strong>Linear Regression</strong> on California Housing,
+        <strong>Polynomial Regression</strong> on MPG data, and
+        <strong>Locally Weighted Linear Regression</strong> on sin(x) —
+        all in one interactive dashboard.
+      </p>
+      <div class="hero-actions">
+        <a href="#models-section" class="btn-primary" id="hero-explore-btn">
+          Explore Models
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#code-section" class="btn-outline" id="hero-code-btn">View Code</a>
+      </div>
+      <!-- 3 model pills -->
+      <div class="model-pills">
+        <div class="pill pill-blue" id="pill-lr">
+          <span class="pill-icon">📈</span>
+          <div>
+            <div class="pill-name">Linear Regression</div>
+            <div class="pill-data">California Housing</div>
+          </div>
+        </div>
+        <div class="pill pill-violet" id="pill-pr">
+          <span class="pill-icon">🎡</span>
+          <div>
+            <div class="pill-name">Polynomial Regression</div>
+            <div class="pill-data">MPG Dataset</div>
+          </div>
+        </div>
+        <div class="pill pill-pink" id="pill-lwlr">
+          <span class="pill-icon">🔔</span>
+          <div>
+            <div class="pill-name">LWLR</div>
+            <div class="pill-data">sin(x) + noise</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MODELS SECTION ── -->
+  <section class="models-section" id="models-section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Interactive</span>
+        <h2 class="section-title">Three Regression Models</h2>
+        <p class="section-desc">Switch between models using the tabs below. Each chart is fully interactive with live parameter controls.</p>
+      </div>
+
+      <!-- Tab switcher -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab active" id="tab-lr" data-tab="lr" role="tab">
+          <span class="tab-num">01</span>
+          <span class="tab-label">Linear Regression</span>
+          <span class="tab-sub">California Housing</span>
+        </button>
+        <button class="tab" id="tab-pr" data-tab="pr" role="tab">
+          <span class="tab-num">02</span>
+          <span class="tab-label">Polynomial Regression</span>
+          <span class="tab-sub">MPG Dataset</span>
+        </button>
+        <button class="tab" id="tab-lwlr" data-tab="lwlr" role="tab">
+          <span class="tab-num">03</span>
+          <span class="tab-label">LWLR</span>
+          <span class="tab-sub">sin(x) + Noise</span>
+        </button>
+      </div>
+
+      <!-- ── PANEL 1: Linear Regression ── -->
+      <div class="tab-panel active" id="panel-lr">
+        <div class="panel-header">
+          <div class="panel-info">
+            <h3 class="panel-title">Linear Regression — California Housing</h3>
+            <p class="panel-desc">Predicting median house value from <strong>Median Income</strong> using OLS linear regression.</p>
+          </div>
+          <div class="panel-stats" id="lr-stats">
+            <div class="pstat"><span class="pstat-val" id="lr-r2">—</span><span class="pstat-lbl">R² Score</span></div>
+            <div class="pstat"><span class="pstat-val" id="lr-rmse">—</span><span class="pstat-lbl">RMSE</span></div>
+            <div class="pstat"><span class="pstat-val" id="lr-pts">—</span><span class="pstat-lbl">Test Points</span></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="lrChart"></canvas>
+        </div>
+        <div class="panel-footer">
+          <span class="axis-info">X axis: Median Income (MedInc) · Y axis: Median House Value ($100k)</span>
+        </div>
+      </div>
+
+      <!-- ── PANEL 2: Polynomial Regression ── -->
+      <div class="tab-panel" id="panel-pr">
+        <div class="panel-header">
+          <div class="panel-info">
+            <h3 class="panel-title">Polynomial Regression — MPG Dataset</h3>
+            <p class="panel-desc">Fitting a <strong>degree-<span id="degreeLabel">2</span> polynomial</strong> to the horsepower vs miles-per-gallon relationship.</p>
+          </div>
+          <div class="panel-stats">
+            <div class="pstat"><span class="pstat-val" id="pr-r2">—</span><span class="pstat-lbl">R² Score</span></div>
+            <div class="pstat"><span class="pstat-val" id="pr-rmse">—</span><span class="pstat-lbl">RMSE</span></div>
+            <div class="pstat"><span class="pstat-val" id="pr-deg">2</span><span class="pstat-lbl">Degree</span></div>
+          </div>
+        </div>
+        <!-- Degree control -->
+        <div class="inline-control">
+          <span class="ic-label">Polynomial Degree</span>
+          <div class="degree-btns">
+            <button class="deg-btn" data-deg="1" id="deg-1">1</button>
+            <button class="deg-btn active" data-deg="2" id="deg-2">2</button>
+            <button class="deg-btn" data-deg="3" id="deg-3">3</button>
+            <button class="deg-btn" data-deg="4" id="deg-4">4</button>
+            <button class="deg-btn" data-deg="6" id="deg-6">6</button>
+            <button class="deg-btn" data-deg="10" id="deg-10">10</button>
+          </div>
+          <span class="ic-hint">Higher degree = more flexible curve</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="prChart"></canvas>
+        </div>
+        <div class="panel-footer">
+          <span class="axis-info">X axis: Horsepower · Y axis: Miles Per Gallon (MPG)</span>
+        </div>
+      </div>
+
+      <!-- ── PANEL 3: LWLR ── -->
+      <div class="tab-panel" id="panel-lwlr">
+        <div class="panel-header">
+          <div class="panel-info">
+            <h3 class="panel-title">Locally Weighted Linear Regression (LWLR)</h3>
+            <p class="panel-desc">Gaussian kernel regression on <strong>sin(x) + noise</strong>. Adjust τ to control bias-variance trade-off.</p>
+          </div>
+          <div class="panel-stats">
+            <div class="pstat"><span class="pstat-val" id="lw-rmse">—</span><span class="pstat-lbl">RMSE</span></div>
+            <div class="pstat"><span class="pstat-val" id="lw-tau">0.50</span><span class="pstat-lbl">τ (tau)</span></div>
+            <div class="pstat"><span class="pstat-val" id="lw-sigma">0.20</span><span class="pstat-lbl">σ noise</span></div>
+          </div>
+        </div>
+        <!-- LWLR Controls -->
+        <div class="lwlr-controls">
+          <div class="lw-ctrl">
+            <span class="lw-ctrl-label">Bandwidth τ</span>
+            <input type="range" id="lwTau" min="0.1" max="2.0" step="0.05" value="0.5" class="lw-slider tau-grad"/>
+            <span class="lw-ctrl-val" id="lwTauVal">0.50</span>
+          </div>
+          <div class="lw-ctrl">
+            <span class="lw-ctrl-label">Noise σ</span>
+            <input type="range" id="lwSigma" min="0.05" max="0.5" step="0.05" value="0.2" class="lw-slider sigma-grad"/>
+            <span class="lw-ctrl-val" id="lwSigmaVal">0.20</span>
+          </div>
+          <div class="lw-actions">
+            <button class="lw-btn regen" id="lwRegen">↻ New Data</button>
+            <button class="lw-btn truth" id="lwTruth">👁 True sin(x)</button>
+            <button class="lw-btn reset" id="lwReset">↺ Reset</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="lwlrChart"></canvas>
+        </div>
+        <div class="panel-footer">
+          <span class="axis-info">X axis: x ∈ [−3, 3] · Y axis: sin(x) + Gaussian noise · Kernel: Gaussian w(i)=exp(−‖xᵢ−x₀‖²/2τ²)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── THEORY SECTION ── -->
+  <section class="theory-section" id="theory-section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Theory</span>
+        <h2 class="section-title">Model Comparison</h2>
+        <p class="section-desc">Key differences between the three regression approaches.</p>
+      </div>
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th><span class="th-blue">Linear Regression</span></th>
+              <th><span class="th-violet">Polynomial Regression</span></th>
+              <th><span class="th-pink">LWLR</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Model Type</td><td>Parametric</td><td>Parametric</td><td>Non-parametric</td></tr>
+            <tr><td>Decision Boundary</td><td>Linear</td><td>Curved (polynomial)</td><td>Local linear</td></tr>
+            <tr><td>Parameters</td><td>θ₀, θ₁</td><td>θ₀…θₙ (n=degree)</td><td>Infinite (kernel)</td></tr>
+            <tr><td>Key Hyperparameter</td><td>None</td><td>Degree d</td><td>Bandwidth τ</td></tr>
+            <tr><td>Overfitting Risk</td><td>Low</td><td>High (large d)</td><td>High (small τ)</td></tr>
+            <tr><td>Training Cost</td><td>O(n)</td><td>O(n·d)</td><td>O(n²) per query</td></tr>
+            <tr><td>Dataset</td><td>California Housing</td><td>Auto MPG</td><td>sin(x)+noise</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Formula cards -->
+      <div class="formula-grid">
+        <div class="formula-card fc-blue" id="fc-linear">
+          <div class="fc-header">
+            <span class="fc-icon">📈</span>
+            <span class="fc-name">Linear Regression</span>
+          </div>
+          <div class="fc-formula">ŷ = θ₀ + θ₁x</div>
+          <div class="fc-solve">θ = (XᵀX)⁻¹ Xᵀy</div>
+          <p class="fc-desc">Minimizes sum of squared residuals (OLS). Best for linearly correlated features.</p>
+        </div>
+        <div class="formula-card fc-violet" id="fc-poly">
+          <div class="fc-header">
+            <span class="fc-icon">🎡</span>
+            <span class="fc-name">Polynomial Regression</span>
+          </div>
+          <div class="fc-formula">ŷ = θ₀ + θ₁x + θ₂x² + … + θₐxᵈ</div>
+          <div class="fc-solve">φ(x) = [1, x, x², …, xᵈ]</div>
+          <p class="fc-desc">Maps features to higher-dimensional space, then applies linear regression.</p>
+        </div>
+        <div class="formula-card fc-pink" id="fc-lw">
+          <div class="fc-header">
+            <span class="fc-icon">🔔</span>
+            <span class="fc-name">Locally Weighted LR</span>
+          </div>
+          <div class="fc-formula">θ = (XᵀWX)⁻¹ XᵀWy</div>
+          <div class="fc-solve">w(i) = exp(−‖xᵢ−x₀‖² / 2τ²)</div>
+          <p class="fc-desc">Fits a local weighted model at each query point using Gaussian kernel weights.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CODE SECTION ── -->
+  <section class="code-section" id="code-section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Source Code</span>
+        <h2 class="section-title">Python Implementation</h2>
+        <p class="section-desc">All three models in one compact script using scikit-learn and NumPy.</p>
+      </div>
+      <div class="code-card">
+        <div class="code-top">
+          <div class="mac-dots"><span class="mac-r"></span><span class="mac-y"></span><span class="mac-g"></span></div>
+          <span class="code-fname">regression_models.py</span>
+          <button class="copy-btn" id="copyBtn" onclick="copyCode()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <pre class="code-body"><code><span class="ck">import</span> numpy <span class="ck">as</span> np, pandas <span class="ck">as</span> pd, matplotlib.pyplot <span class="ck">as</span> plt, seaborn <span class="ck">as</span> sns
+<span class="ck">from</span> sklearn.linear_model <span class="ck">import</span> LinearRegression
+<span class="ck">from</span> sklearn.preprocessing <span class="ck">import</span> PolynomialFeatures
+<span class="ck">from</span> sklearn.model_selection <span class="ck">import</span> train_test_split
+<span class="ck">from</span> sklearn.datasets <span class="ck">import</span> fetch_california_housing
+
+<span class="cc"># ── 1. Linear Regression ─────────────────────────────</span>
+h = fetch_california_housing()
+X = pd.DataFrame(h.data, columns=h.feature_names)[[<span class="cs">'MedInc'</span>]]
+y = h.target
+x1,x2,y1,y2 = train_test_split(X,y,test_size=<span class="cn">0.2</span>,random_state=<span class="cn">42</span>)
+
+m = LinearRegression().fit(x1,y1)
+plt.scatter(x2,y2,alpha=<span class="cn">0.4</span>,label=<span class="cs">'Test data'</span>)
+plt.plot(x2.sort_values(<span class="cs">'MedInc'</span>), m.predict(x2.sort_values(<span class="cs">'MedInc'</span>)),
+         color=<span class="cs">'red'</span>, label=<span class="cs">'Linear fit'</span>)
+plt.xlabel(<span class="cs">'Median Income'</span>); plt.ylabel(<span class="cs">'House Value ($100k)'</span>)
+plt.legend(); plt.title(<span class="cs">'Linear Regression – California Housing'</span>); plt.show()
+
+<span class="cc"># ── 2. Polynomial Regression ─────────────────────────</span>
+d = sns.load_dataset(<span class="cs">'mpg'</span>).dropna()
+X,y = d[[<span class="cs">'horsepower'</span>]], d[<span class="cs">'mpg'</span>]
+
+p = PolynomialFeatures(<span class="cn">2</span>)
+m.fit(p.fit_transform(X), y)
+
+x = np.linspace(X.min(),X.max(),<span class="cn">100</span>).reshape(<span class="cn">-1</span>,<span class="cn">1</span>)
+plt.scatter(X,y,alpha=<span class="cn">0.5</span>,label=<span class="cs">'Data'</span>)
+plt.plot(x, m.predict(p.transform(x)), color=<span class="cs">'purple'</span>, label=<span class="cs">'Poly degree 2'</span>)
+plt.xlabel(<span class="cs">'Horsepower'</span>); plt.ylabel(<span class="cs">'MPG'</span>)
+plt.legend(); plt.title(<span class="cs">'Polynomial Regression – MPG Dataset'</span>); plt.show()
+
+<span class="cc"># ── 3. Locally Weighted Linear Regression (LWLR) ─────</span>
+X = np.linspace(<span class="cn">-3</span>,<span class="cn">3</span>,<span class="cn">100</span>).reshape(<span class="cn">-1</span>,<span class="cn">1</span>)
+y = np.sin(X).ravel()+np.random.normal(<span class="cn">0</span>,<span class="cn">0.2</span>,<span class="cn">100</span>)
+
+<span class="ck">def</span> <span class="cf">f</span>(x0, t=<span class="cn">0.5</span>):
+    w  = np.exp(-np.sum((X-x0)**<span class="cn">2</span>,<span class="cn">1</span>)/(<span class="cn">2</span>*t*t))
+    W  = np.diag(w)
+    X1 = np.c_[np.ones(len(X)),X]
+    th = np.linalg.pinv(X1.T@W@X1)@X1.T@W@y
+    <span class="ck">return</span> np.r_[<span class="cn">1</span>,x0]@th
+
+xt = np.linspace(<span class="cn">-3</span>,<span class="cn">3</span>,<span class="cn">300</span>).reshape(<span class="cn">-1</span>,<span class="cn">1</span>)
+plt.scatter(X,y,alpha=<span class="cn">0.6</span>,label=<span class="cs">'Data'</span>)
+plt.plot(xt,[f(i) <span class="ck">for</span> i <span class="ck">in</span> xt],color=<span class="cs">'#f472b6'</span>,label=<span class="cs">'LWLR (τ=0.5)'</span>)
+plt.legend(); plt.title(<span class="cs">'LWLR – sin(x) + Noise'</span>); plt.show()</code></pre>
+      </div>
+      <div class="install-card">
+        <div class="code-top">
+          <div class="mac-dots"><span class="mac-r"></span><span class="mac-y"></span><span class="mac-g"></span></div>
+          <span class="code-fname">terminal</span>
+        </div>
+        <pre class="code-body"><code><span class="cc"># Install all dependencies</span>
+pip install numpy pandas matplotlib seaborn scikit-learn
+
+<span class="cc"># Run</span>
+python regression_models.py</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 36 24" fill="none" width="22" height="15">
+          <polyline points="2,20 8,10 14,14 20,6 26,12 34,4" stroke="url(#fg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs><linearGradient id="fg" x1="0" y1="0" x2="36" y2="0"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs>
+        </svg>
+        <span>ML Regression Visualizer</span>
+      </div>
+      <p class="footer-sub">Linear · Polynomial · Locally Weighted — all in one interactive dashboard</p>
+      <div class="footer-links">
+        <a href="https://github.com/deepthi-tr05/ml-regression-viz" target="_blank" id="footer-gh">GitHub</a>
+        <a href="https://scikit-learn.org" target="_blank" id="footer-sk">scikit-learn</a>
+        <a href="https://cs229.stanford.edu" target="_blank" id="footer-cs229">CS229</a>
+      </div>
+      <p class="footer-copy">© 2026 Deepthi · MIT License</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
